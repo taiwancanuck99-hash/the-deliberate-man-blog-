@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const essays = (await getCollection('essays')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Dispatches | The Deliberate Man" description="All essays from The Deliberate Man." />
+	</head>
+	<body class="flex flex-col min-h-screen">
+		<Header />
+		
+		<main class="flex-grow max-w-4xl mx-auto px-6 py-20 w-full">
+			<section class="mb-16 text-center">
+				<h1 class="text-5xl md:text-7xl font-serif text-brand-black">Dispatches.</h1>
+				<p class="text-brand-darkgray mt-4 font-bold uppercase tracking-widest text-sm">
+					The Archive
+				</p>
+			</section>
+
+			<div class="divider"></div>
+
+			<section class="py-12">
+				<div class="max-w-2xl mx-auto space-y-12">
+					{
+						essays.map((essay) => (
+							<article class="group">
+								<a href={`/essays/${essay.id}/`} class="block no-underline !text-brand-black !decoration-transparent">
+									<h3 class="text-3xl font-serif font-bold text-brand-black group-hover:underline decoration-2 underline-offset-4 mb-3">
+										{essay.data.title}
+									</h3>
+									<p class="text-brand-darkgray font-sans text-lg m-0">
+										{essay.data.description}
+									</p>
+									<p class="text-sm font-bold uppercase tracking-widest text-brand-black mt-4">
+										{essay.data.pubDate.toLocaleDateString('en-us', {
+											year: 'numeric',
+											month: 'short',
+											day: 'numeric',
+										})}
+									</p>
+								</a>
+							</article>
+						))
+					}
+				</div>
+			</section>
+		</main>
+		
+		<Footer />
+	</body>
+</html>
