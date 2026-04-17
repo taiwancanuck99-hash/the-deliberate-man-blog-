@@ -1,0 +1,82 @@
+---
+---
+<section class="newsletter-section">
+	<h2>Join the Vanguard</h2>
+	<p>Receive stark, unfiltered insights on discipline and purpose. No spam, no fluff.</p>
+	<form id="newsletter-form" class="heavy-border">
+		<label for="email" class="sr-only">Email Address</label>
+		<input type="email" id="email" name="email" placeholder="YOUR EMAIL ADDRESS" required />
+		<button type="submit">Subscribe</button>
+	</form>
+	<div id="form-message" class="message hidden"></div>
+</section>
+
+<style>
+	.newsletter-section {
+		margin: 4rem 0;
+	}
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		padding: 1rem;
+		background: var(--white);
+	}
+	@media (min-width: 600px) {
+		form {
+			flex-direction: row;
+			padding: 0;
+		}
+		input {
+			flex-grow: 1;
+			border: none;
+			border-right: 4px solid var(--black);
+		}
+		button {
+			border: none;
+		}
+	}
+	.message {
+		margin-top: 1rem;
+		font-weight: bold;
+		padding: 1rem;
+	}
+	.hidden {
+		display: none;
+	}
+	.success {
+		background: var(--black);
+		color: var(--white);
+	}
+	.error {
+		border: 4px solid red;
+		color: red;
+	}
+</style>
+
+<script>
+	const form = document.getElementById('newsletter-form');
+	const messageEl = document.getElementById('form-message');
+
+	if(form && messageEl) {
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const emailInput = document.getElementById('email') as HTMLInputElement;
+			const email = emailInput.value;
+			
+			// Mock API endpoint for the newsletter
+			try {
+				console.log("Submitting to mock API: ", email);
+				// Simulate API call delay
+				await new Promise(resolve => setTimeout(resolve, 500));
+				
+				messageEl.textContent = 'CONFIRMED. YOU ARE ON THE LIST.';
+				messageEl.className = 'message success';
+				(form as HTMLFormElement).reset();
+			} catch (error) {
+				messageEl.textContent = 'ERROR: FAILED TO SUBSCRIBE.';
+				messageEl.className = 'message error';
+			}
+		});
+	}
+</script>

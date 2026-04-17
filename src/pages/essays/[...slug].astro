@@ -1,0 +1,63 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import { render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+// If this is dynamic (server output), we don't strictly *need* getStaticPaths, 
+// but since we want to handle routing properly, let's just fetch the essay.
+export async function getStaticPaths() {
+	const essays = await getCollection('essays');
+	return essays.map((essay) => ({
+		params: { slug: essay.id },
+		props: essay,
+	}));
+}
+// Since we have output: 'server', Astro will ignore getStaticPaths unless prerender = true
+export const prerender = true;
+
+type Props = CollectionEntry<'essays'>;
+
+const essay = Astro.props;
+const { Content } = await render(essay);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`${essay.data.title} | The Deliberate Man`} description={essay.data.description} />
+	</head>
+	<body class="flex flex-col min-h-screen">
+		<Header />
+		
+		<main class="flex-grow max-w-3xl mx-auto px-6 py-20 w-full">
+			<article class="prose prose-lg prose-neutral max-w-none">
+				<header class="mb-12 text-center">
+					<h1 class="text-4xl md:text-6xl font-serif font-bold text-brand-black mb-6 leading-tight">
+						{essay.data.title}
+					</h1>
+					<div class="text-brand-gray-dark uppercase tracking-widest text-sm font-bold">
+						<time datetime={essay.data.pubDate.toISOString()}>
+							{
+								essay.data.pubDate.toLocaleDateString('en-us', {
+									year: 'numeric',
+									month: 'short',
+									day: 'numeric',
+								})
+							}
+						</time>
+					</div>
+				</header>
+				
+				<div class="divider"></div>
+
+				<div class="text-brand-darkgray font-sans text-lg leading-relaxed space-y-6">
+					<Content />
+				</div>
+			</article>
+		</main>
+		
+		<Footer />
+	</body>
+</html>

@@ -1,0 +1,156 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const essays = (await getCollection('essays')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="The Deliberate Man" description="Discipline and purpose for the second half of life." />
+	</head>
+	<body class="flex flex-col min-h-screen">
+		<Header />
+		
+		<main class="flex-grow max-w-4xl mx-auto px-6 py-20 w-full">
+			
+			<!-- Hero Section -->
+			<section class="text-center py-20 space-y-6">
+				<h1 class="text-5xl md:text-7xl">The Deliberate Man.</h1>
+				<p class="text-xl md:text-2xl font-medium tracking-wide text-brand-darkgray max-w-2xl mx-auto">
+					Discipline and purpose for the second half of life.
+				</p>
+			</section>
+
+			<div class="divider"></div>
+
+			<!-- Core Philosophy Grid -->
+			<section class="py-12">
+				<h2 class="text-3xl text-center mb-12">The Triad of the Vanguard</h2>
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+					
+					<div class="space-y-4">
+						<h3 class="text-2xl border-b-2 border-brand-black inline-block pb-1">Philosophy</h3>
+						<p>
+							Strip away the superfluous. We study the stoics, the modern ascetics, and the rugged thinkers who chose truth over comfort.
+						</p>
+					</div>
+					
+					<div class="space-y-4">
+						<h3 class="text-2xl border-b-2 border-brand-black inline-block pb-1">Discipline</h3>
+						<p>
+							The engine of reality. Without it, potential is just a dream. We forge habits that harden the body and focus the mind.
+						</p>
+					</div>
+					
+					<div class="space-y-4">
+						<h3 class="text-2xl border-b-2 border-brand-black inline-block pb-1">Brotherhood</h3>
+						<p>
+							Isolation breeds weakness. We form alliances of accountability, pushing each other to higher standards of existence.
+						</p>
+					</div>
+
+				</div>
+			</section>
+
+			<div class="divider"></div>
+
+			<!-- Latest Dispatches -->
+			<section class="py-12">
+				<h2 class="text-3xl text-center mb-12">Latest Dispatches</h2>
+				<div class="max-w-2xl mx-auto space-y-10">
+					{
+						essays.map((essay) => (
+							<article class="group">
+								<a href={`/essays/${essay.id}/`} class="block no-underline !text-brand-black !decoration-transparent">
+									<h3 class="text-2xl font-serif font-bold text-brand-black group-hover:underline decoration-2 underline-offset-4 mb-2">
+										{essay.data.title}
+									</h3>
+									<p class="text-brand-darkgray font-sans m-0">
+										{essay.data.description}
+									</p>
+								</a>
+							</article>
+						))
+					}
+				</div>
+			</section>
+
+			<div class="divider"></div>
+
+			<!-- Newsletter Section -->
+			<section class="py-12 max-w-lg mx-auto text-center">
+				<h2 class="text-4xl mb-4">Join the Vanguard</h2>
+				<p class="mb-8">
+					Receive stark, unfiltered insights directly to your inbox. No spam. No fluff.
+				</p>
+
+				<form id="newsletter-form" class="flex flex-col sm:flex-row gap-4">
+					<label for="email" class="sr-only">Email Address</label>
+					<input 
+						type="email" 
+						id="email" 
+						name="email" 
+						placeholder="YOUR EMAIL" 
+						required 
+						class="flex-grow border-2 border-brand-black px-4 py-3 placeholder:text-brand-gray focus:border-brand-black focus:ring-1 focus:ring-brand-black"
+					/>
+					<button 
+						type="submit" 
+						class="bg-brand-black text-brand-white px-8 py-3 font-bold uppercase tracking-wider hover:bg-brand-darkgray transition-colors border-2 border-brand-black"
+					>
+						Commit
+					</button>
+				</form>
+				<div id="form-message" class="hidden mt-6 p-4 font-bold tracking-widest uppercase"></div>
+			</section>
+
+		</main>
+		<Footer />
+
+		<script>
+			const form = document.getElementById('newsletter-form');
+			const messageEl = document.getElementById('form-message');
+
+			if (form && messageEl) {
+				form.addEventListener('submit', async (e) => {
+					e.preventDefault();
+					const emailInput = document.getElementById('email') as HTMLInputElement;
+					
+					const formData = new FormData();
+					formData.append('email', emailInput.value);
+
+					messageEl.classList.remove('hidden', 'bg-brand-black', 'text-brand-white', 'text-red-600', 'border-2', 'border-red-600');
+					messageEl.textContent = 'TRANSMITTING...';
+					messageEl.classList.add('block');
+
+					try {
+						const res = await fetch('/api/subscribe', {
+							method: 'POST',
+							body: formData
+						});
+
+						const data = await res.json();
+
+						if (res.ok) {
+							messageEl.textContent = data.message;
+							messageEl.classList.add('bg-brand-black', 'text-brand-white');
+							(form as HTMLFormElement).reset();
+						} else {
+							throw new Error(data.message);
+						}
+					} catch (error: any) {
+						messageEl.textContent = error.message || 'ERROR: FAILED TO SUBSCRIBE.';
+						messageEl.classList.add('text-red-600', 'border-2', 'border-red-600');
+					}
+				});
+			}
+		</script>
+	</body>
+</html>
