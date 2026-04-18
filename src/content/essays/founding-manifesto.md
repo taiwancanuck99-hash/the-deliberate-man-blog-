@@ -2,6 +2,7 @@
 title: 'Founding Manifesto for The Deliberate Man'
 description: 'We reject the lie that fulfillment lies in status. This is philosophy lived in action. Become a Deliberate Man.'
 pubDate: 'Apr 17 2026'
+isCore: true
 ---
 
 Most men are not evil.

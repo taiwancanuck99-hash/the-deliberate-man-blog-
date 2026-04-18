@@ -5,9 +5,12 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
-const essays = (await getCollection('essays')).sort(
+const allEssays = (await getCollection('essays')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const coreEssays = allEssays.filter((essay) => essay.data.isCore);
+const dispatchEssays = allEssays.filter((essay) => !essay.data.isCore);
 ---
 
 <!doctype html>
@@ -61,12 +64,38 @@ const essays = (await getCollection('essays')).sort(
 
 			<div class="divider"></div>
 
+			<!-- The Foundations -->
+			{coreEssays.length > 0 && (
+				<>
+					<section class="py-12">
+						<h2 class="text-3xl text-center mb-12">The Foundations</h2>
+						<div class="max-w-2xl mx-auto space-y-10">
+							{
+								coreEssays.map((essay) => (
+									<article class="group border-l-4 border-brand-black pl-6 py-2">
+										<a href={`/essays/${essay.id}/`} class="block no-underline !text-brand-black !decoration-transparent">
+											<h3 class="text-2xl font-serif font-bold text-brand-black group-hover:underline decoration-2 underline-offset-4 mb-2">
+												{essay.data.title}
+											</h3>
+											<p class="text-brand-darkgray font-sans m-0">
+												{essay.data.description}
+											</p>
+										</a>
+									</article>
+								))
+							}
+						</div>
+					</section>
+					<div class="divider"></div>
+				</>
+			)}
+
 			<!-- Latest Dispatches -->
 			<section class="py-12">
 				<h2 class="text-3xl text-center mb-12">Latest Dispatches</h2>
 				<div class="max-w-2xl mx-auto space-y-10">
 					{
-						essays.map((essay) => (
+						dispatchEssays.map((essay) => (
 							<article class="group">
 								<a href={`/essays/${essay.id}/`} class="block no-underline !text-brand-black !decoration-transparent">
 									<h3 class="text-2xl font-serif font-bold text-brand-black group-hover:underline decoration-2 underline-offset-4 mb-2">

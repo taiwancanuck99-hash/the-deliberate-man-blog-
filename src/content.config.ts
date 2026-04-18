@@ -10,6 +10,7 @@ const essays = defineCollection({
 			description: z.string(),
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
+			isCore: z.boolean().optional().default(false),
 		}),
 });
 
