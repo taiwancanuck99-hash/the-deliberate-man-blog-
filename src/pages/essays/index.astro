@@ -17,34 +17,32 @@ const essays = (await getCollection('essays')).sort(
 	<body class="flex flex-col min-h-screen">
 		<Header />
 		
-		<main class="flex-grow max-w-4xl mx-auto px-6 py-20 w-full">
-			<section class="mb-16 text-center">
-				<h1 class="text-5xl md:text-7xl font-serif text-brand-black">Dispatches.</h1>
-				<p class="text-brand-darkgray mt-4 font-bold uppercase tracking-widest text-sm">
+		<main class="flex-grow w-full">
+			<section class="bg-brand-black text-brand-white py-24 text-center">
+				<h1 class="text-6xl md:text-8xl font-serif font-black !text-brand-white tracking-tighter">Dispatches.</h1>
+				<p class="text-brand-gray mt-4 font-bold uppercase tracking-widest text-lg">
 					The Archive
 				</p>
 			</section>
 
-			<div class="divider"></div>
-
-			<section class="py-12">
-				<div class="max-w-2xl mx-auto space-y-12">
+			<section class="py-16 max-w-4xl mx-auto px-6">
+				<div class="max-w-3xl mx-auto space-y-16">
 					{
 						essays.map((essay) => (
-							<article class="group">
+							<article class="group border-l-[6px] border-brand-black pl-8 py-2 hover:border-brand-darkgray transition-colors">
 								<a href={`/essays/${essay.id}/`} class="block no-underline !text-brand-black !decoration-transparent">
-									<h3 class="text-3xl font-serif font-bold text-brand-black group-hover:underline decoration-2 underline-offset-4 mb-3">
-										{essay.data.title}
-									</h3>
-									<p class="text-brand-darkgray font-sans text-lg m-0">
-										{essay.data.description}
-									</p>
-									<p class="text-sm font-bold uppercase tracking-widest text-brand-black mt-4">
+									<p class="text-sm font-bold uppercase tracking-widest text-brand-darkgray mb-2">
 										{essay.data.pubDate.toLocaleDateString('en-us', {
 											year: 'numeric',
 											month: 'short',
 											day: 'numeric',
 										})}
+									</p>
+									<h3 class="text-4xl font-serif font-black text-brand-black group-hover:underline decoration-[3px] underline-offset-4 mb-4">
+										{essay.data.title}
+									</h3>
+									<p class="text-brand-darkgray font-sans text-xl m-0">
+										{essay.data.description}
 									</p>
 								</a>
 							</article>
@@ -57,3 +55,4 @@ const essays = (await getCollection('essays')).sort(
 		<Footer />
 	</body>
 </html>
+

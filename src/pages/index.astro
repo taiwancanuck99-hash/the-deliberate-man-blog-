@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const allEssays = (await getCollection('essays')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -21,125 +20,136 @@ const dispatchEssays = allEssays.filter((essay) => !essay.data.isCore);
 	<body class="flex flex-col min-h-screen">
 		<Header />
 		
-		<main class="flex-grow max-w-4xl mx-auto px-6 py-20 w-full">
+		<main class="flex-grow w-full">
 			
 			<!-- Hero Section -->
-			<section class="text-center py-20 space-y-6">
-				<h1 class="text-5xl md:text-7xl">The Deliberate Man.</h1>
-				<p class="text-xl md:text-2xl font-medium tracking-wide text-brand-darkgray max-w-2xl mx-auto">
-					Discipline and purpose for the second half of life.
-				</p>
-			</section>
-
-			<div class="divider"></div>
-
-			<!-- Core Philosophy Grid -->
-			<section class="py-12">
-				<h2 class="text-3xl text-center mb-12">The Triad of the Vanguard</h2>
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-					
-					<div class="space-y-4">
-						<h3 class="text-2xl border-b-2 border-brand-black inline-block pb-1">Philosophy</h3>
-						<p>
-							Strip away the superfluous. We study the stoics, the modern ascetics, and the rugged thinkers who chose truth over comfort.
-						</p>
-					</div>
-					
-					<div class="space-y-4">
-						<h3 class="text-2xl border-b-2 border-brand-black inline-block pb-1">Discipline</h3>
-						<p>
-							The engine of reality. Without it, potential is just a dream. We forge habits that harden the body and focus the mind.
-						</p>
-					</div>
-					
-					<div class="space-y-4">
-						<h3 class="text-2xl border-b-2 border-brand-black inline-block pb-1">Brotherhood</h3>
-						<p>
-							Isolation breeds weakness. We form alliances of accountability, pushing each other to higher standards of existence.
-						</p>
-					</div>
-
+			<section class="bg-brand-black text-brand-white py-32 px-6 w-full text-center">
+				<div class="max-w-4xl mx-auto space-y-8">
+					<h1 class="text-6xl md:text-8xl !text-brand-white font-black tracking-tighter">
+						The Deliberate Man.
+					</h1>
+					<p class="text-2xl md:text-3xl font-sans font-medium tracking-wide !text-brand-gray max-w-2xl mx-auto">
+						Discipline and purpose for the second half of life.
+					</p>
 				</div>
 			</section>
 
-			<div class="divider"></div>
-
-			<!-- The Foundations -->
-			{coreEssays.length > 0 && (
-				<>
-					<section class="py-12">
-						<h2 class="text-3xl text-center mb-12">The Foundations</h2>
-						<div class="max-w-2xl mx-auto space-y-10">
-							{
-								coreEssays.map((essay) => (
-									<article class="group border-l-4 border-brand-black pl-6 py-2">
-										<a href={`/essays/${essay.id}/`} class="block no-underline !text-brand-black !decoration-transparent">
-											<h3 class="text-2xl font-serif font-bold text-brand-black group-hover:underline decoration-2 underline-offset-4 mb-2">
-												{essay.data.title}
-											</h3>
-											<p class="text-brand-darkgray font-sans m-0">
-												{essay.data.description}
-											</p>
-										</a>
-									</article>
-								))
-							}
+			<div class="max-w-4xl mx-auto px-6 py-12 w-full">
+				<!-- Core Philosophy Grid -->
+				<section class="py-16">
+					<h2 class="text-4xl text-center mb-16 uppercase tracking-widest font-sans font-black">The Triad of the Vanguard</h2>
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+						
+						<div class="border-[3px] border-brand-black p-8 hover:-translate-y-2 transition-transform bg-brand-white shadow-[8px_8px_0_0_#050505]">
+							<h3 class="text-3xl font-black mb-4">Philosophy</h3>
+							<p class="text-lg">
+								Strip away the superfluous. We study the stoics, the modern ascetics, and the rugged thinkers who chose truth over comfort.
+							</p>
 						</div>
-					</section>
-					<div class="divider"></div>
-				</>
-			)}
+						
+						<div class="border-[3px] border-brand-black p-8 hover:-translate-y-2 transition-transform bg-brand-black text-brand-white shadow-[8px_8px_0_0_#e5e5e5]">
+							<h3 class="text-3xl font-black mb-4 !text-brand-white">Discipline</h3>
+							<p class="text-lg !text-brand-gray">
+								The engine of reality. Without it, potential is just a dream. We forge habits that harden the body and focus the mind.
+							</p>
+						</div>
+						
+						<div class="border-[3px] border-brand-black p-8 hover:-translate-y-2 transition-transform bg-brand-white shadow-[8px_8px_0_0_#050505]">
+							<h3 class="text-3xl font-black mb-4">Brotherhood</h3>
+							<p class="text-lg">
+								Isolation breeds weakness. We form alliances of accountability, pushing each other to higher standards of existence.
+							</p>
+						</div>
 
-			<!-- Latest Dispatches -->
-			<section class="py-12">
-				<h2 class="text-3xl text-center mb-12">Latest Dispatches</h2>
-				<div class="max-w-2xl mx-auto space-y-10">
-					{
-						dispatchEssays.map((essay) => (
-							<article class="group">
-								<a href={`/essays/${essay.id}/`} class="block no-underline !text-brand-black !decoration-transparent">
-									<h3 class="text-2xl font-serif font-bold text-brand-black group-hover:underline decoration-2 underline-offset-4 mb-2">
-										{essay.data.title}
-									</h3>
-									<p class="text-brand-darkgray font-sans m-0">
-										{essay.data.description}
-									</p>
-								</a>
-							</article>
-						))
-					}
-				</div>
-			</section>
+					</div>
+				</section>
 
-			<div class="divider"></div>
+				<div class="divider"></div>
 
-			<!-- Newsletter Section -->
-			<section class="py-12 max-w-lg mx-auto text-center">
-				<h2 class="text-4xl mb-4">Join the Vanguard</h2>
-				<p class="mb-8">
-					Receive stark, unfiltered insights directly to your inbox. No spam. No fluff.
-				</p>
+				<!-- The Foundations -->
+				{coreEssays.length > 0 && (
+					<>
+						<section class="py-16">
+							<h2 class="text-4xl text-center mb-16 uppercase tracking-widest font-sans font-black">The Foundations</h2>
+							<div class="max-w-3xl mx-auto space-y-8">
+								{
+									coreEssays.map((essay) => (
+										<article class="group relative border-[3px] border-brand-black bg-brand-white hover:bg-brand-black hover:text-brand-white transition-colors">
+											<a href={`/essays/${essay.id}/`} class="block p-8 no-underline !text-brand-black group-hover:!text-brand-white !decoration-transparent">
+												<h3 class="text-3xl font-black mb-3 group-hover:!text-brand-white transition-colors">
+													{essay.data.title}
+												</h3>
+												<p class="font-sans text-xl m-0 group-hover:!text-brand-gray transition-colors">
+													{essay.data.description}
+												</p>
+											</a>
+										</article>
+									))
+								}
+							</div>
+						</section>
+						<div class="divider"></div>
+					</>
+				)}
 
-				<form id="newsletter-form" class="flex flex-col sm:flex-row gap-4">
-					<label for="email" class="sr-only">Email Address</label>
-					<input 
-						type="email" 
-						id="email" 
-						name="email" 
-						placeholder="YOUR EMAIL" 
-						required 
-						class="flex-grow border-2 border-brand-black px-4 py-3 placeholder:text-brand-gray focus:border-brand-black focus:ring-1 focus:ring-brand-black"
-					/>
-					<button 
-						type="submit" 
-						class="bg-brand-black text-brand-white px-8 py-3 font-bold uppercase tracking-wider hover:bg-brand-darkgray transition-colors border-2 border-brand-black"
-					>
-						Commit
-					</button>
-				</form>
-				<div id="form-message" class="hidden mt-6 p-4 font-bold tracking-widest uppercase"></div>
-			</section>
+				<!-- Latest Dispatches -->
+				<section class="py-16">
+					<h2 class="text-4xl text-center mb-16 uppercase tracking-widest font-sans font-black">Latest Dispatches</h2>
+					<div class="max-w-3xl mx-auto space-y-12">
+						{
+							dispatchEssays.map((essay) => (
+								<article class="group border-l-[6px] border-brand-black pl-8 py-2 hover:border-brand-darkgray transition-colors">
+									<a href={`/essays/${essay.id}/`} class="block no-underline !text-brand-black !decoration-transparent">
+										<p class="text-sm font-bold uppercase tracking-widest text-brand-darkgray mb-2">
+											{essay.data.pubDate.toLocaleDateString('en-us', {
+												year: 'numeric',
+												month: 'short',
+												day: 'numeric',
+											})}
+										</p>
+										<h3 class="text-3xl font-serif font-black text-brand-black group-hover:underline decoration-[3px] underline-offset-4 mb-3">
+											{essay.data.title}
+										</h3>
+										<p class="text-brand-darkgray font-sans text-xl m-0">
+											{essay.data.description}
+										</p>
+									</a>
+								</article>
+							))
+						}
+					</div>
+				</section>
 
+				<div class="divider"></div>
+
+				<!-- Newsletter Section -->
+				<section class="py-24 max-w-xl mx-auto text-center">
+					<h2 class="text-5xl font-black mb-6">Join the Vanguard</h2>
+					<p class="text-xl mb-10">
+						Receive stark, unfiltered insights directly to your inbox. No spam. No fluff.
+					</p>
+
+					<form id="newsletter-form" class="flex flex-col gap-4">
+						<label for="email" class="sr-only">Email Address</label>
+						<input 
+							type="email" 
+							id="email" 
+							name="email" 
+							placeholder="YOUR EMAIL" 
+							required 
+							class="w-full border-[3px] border-brand-black px-6 py-4 text-xl placeholder:text-brand-gray focus:border-brand-black focus:ring-0 focus:outline-none focus:bg-brand-white bg-brand-white"
+						/>
+						<button 
+							type="submit" 
+							class="w-full bg-brand-black text-brand-white px-8 py-5 text-xl font-black uppercase tracking-widest hover:bg-brand-white hover:text-brand-black transition-colors border-[3px] border-brand-black"
+						>
+							Commit
+						</button>
+					</form>
+					<div id="form-message" class="hidden mt-6 p-4 font-bold tracking-widest uppercase border-[3px]"></div>
+				</section>
+
+			</div>
 		</main>
 		<Footer />
 
@@ -155,9 +165,9 @@ const dispatchEssays = allEssays.filter((essay) => !essay.data.isCore);
 					const formData = new FormData();
 					formData.append('email', emailInput.value);
 
-					messageEl.classList.remove('hidden', 'bg-brand-black', 'text-brand-white', 'text-red-600', 'border-2', 'border-red-600');
+					messageEl.classList.remove('hidden', 'bg-brand-black', 'text-brand-white', 'text-red-600', 'border-red-600', 'border-brand-black');
 					messageEl.textContent = 'TRANSMITTING...';
-					messageEl.classList.add('block');
+					messageEl.classList.add('block', 'border-brand-black', 'text-brand-black');
 
 					try {
 						const res = await fetch('/api/subscribe', {
@@ -169,17 +179,20 @@ const dispatchEssays = allEssays.filter((essay) => !essay.data.isCore);
 
 						if (res.ok) {
 							messageEl.textContent = data.message;
-							messageEl.classList.add('bg-brand-black', 'text-brand-white');
+							messageEl.classList.remove('text-brand-black');
+							messageEl.classList.add('bg-brand-black', 'text-brand-white', 'border-brand-black');
 							(form as HTMLFormElement).reset();
 						} else {
 							throw new Error(data.message);
 						}
 					} catch (error: any) {
 						messageEl.textContent = error.message || 'ERROR: FAILED TO SUBSCRIBE.';
-						messageEl.classList.add('text-red-600', 'border-2', 'border-red-600');
+						messageEl.classList.remove('border-brand-black', 'text-brand-black');
+						messageEl.classList.add('text-red-600', 'border-red-600');
 					}
 				});
 			}
 		</script>
 	</body>
 </html>
+

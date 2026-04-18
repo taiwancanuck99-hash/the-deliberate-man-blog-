@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -12,7 +12,7 @@
 }
 
 body {
-  @apply bg-brand-white text-brand-black font-sans antialiased;
+  @apply bg-brand-white text-brand-black font-sans antialiased selection:bg-brand-black selection:text-brand-white;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -20,12 +20,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .divider {
-  @apply w-full h-[1px] bg-brand-gray my-12;
+  @apply w-full h-[2px] bg-brand-black my-12;
 }
 
 /* Base element styles matching the brand guidelines */
 p {
-  @apply leading-relaxed mb-6 text-brand-darkgray;
+  @apply leading-relaxed mb-6 text-brand-darkgray text-lg;
 }
 
 a {
@@ -35,3 +35,4 @@ a {
 input, button {
   @apply font-sans outline-none rounded-none;
 }
+
