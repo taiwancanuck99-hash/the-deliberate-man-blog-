@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+
+const allEssays = (await getCollection('essays')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// Get the latest standard essay (not core)
+const dispatchEssays = allEssays.filter((essay) => !essay.data.isCore);
+const latestDispatch = dispatchEssays.length > 0 ? dispatchEssays[0] : null;
+
+// Find specific core posts to highlight
+const coreInquiries = allEssays.find((e) => e.id === 'the-core-inquiries');
+const foundingManifesto = allEssays.find((e) => e.id === 'founding-manifesto');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="The Deliberate Man | Links" description="Discipline and purpose for the second half of life." />
+	</head>
+	<body class="bg-brand-white text-brand-black min-h-screen flex flex-col items-center py-12 px-6">
+		
+		<div class="max-w-md w-full mx-auto space-y-8 mt-8">
+			<!-- Header / Logo -->
+			<div class="text-center mb-12">
+				<a href="/" class="block no-underline">
+					<h1 class="text-5xl md:text-6xl font-black tracking-tighter uppercase mb-4 text-brand-black hover:text-brand-gray transition-colors">
+						The Deliberate Man.
+					</h1>
+				</a>
+				<p class="text-xl font-sans font-medium text-brand-gray">
+					Discipline and purpose for the second half of life.
+				</p>
+			</div>
+
+			<!-- Links Grid -->
+			<div class="flex flex-col gap-6 w-full">
+				
+				<!-- Newsletter / Subscribe -->
+				<a href="/" class="block w-full border-[3px] border-brand-black bg-brand-black text-brand-white p-6 text-center hover:-translate-y-1 transition-transform shadow-[6px_6px_0_0_#050505] group decoration-transparent">
+					<h2 class="text-2xl font-black uppercase tracking-widest group-hover:text-brand-gray transition-colors m-0">Join the Vanguard</h2>
+					<p class="text-sm font-sans mt-2 opacity-80 m-0 group-hover:text-brand-gray transition-colors">Free weekly dispatches on discipline and meaning.</p>
+				</a>
+
+				<!-- Latest Dispatch -->
+				{latestDispatch && (
+					<a href={`/essays/${latestDispatch.id}/`} class="block w-full border-[3px] border-brand-black bg-brand-white text-brand-black p-6 text-center hover:-translate-y-1 transition-transform shadow-[6px_6px_0_0_#050505] group decoration-transparent">
+						<p class="text-xs font-bold uppercase tracking-widest text-brand-darkgray mb-2">Latest Dispatch</p>
+						<h2 class="text-2xl font-black uppercase tracking-widest m-0 group-hover:text-brand-gray transition-colors">{latestDispatch.data.title}</h2>
+					</a>
+				)}
+
+				<!-- The Core Inquiries -->
+				{coreInquiries && (
+					<a href={`/essays/${coreInquiries.id}/`} class="block w-full border-[3px] border-brand-black bg-brand-white text-brand-black p-6 text-center hover:-translate-y-1 transition-transform shadow-[6px_6px_0_0_#050505] group decoration-transparent">
+						<p class="text-xs font-bold uppercase tracking-widest text-brand-darkgray mb-2">Start Here</p>
+						<h2 class="text-2xl font-black uppercase tracking-widest m-0 group-hover:text-brand-gray transition-colors">{coreInquiries.data.title}</h2>
+					</a>
+				)}
+
+				<!-- Founding Manifesto -->
+				{foundingManifesto && (
+					<a href={`/essays/${foundingManifesto.id}/`} class="block w-full border-[3px] border-brand-black bg-brand-white text-brand-black p-6 text-center hover:-translate-y-1 transition-transform shadow-[6px_6px_0_0_#050505] group decoration-transparent">
+						<p class="text-xs font-bold uppercase tracking-widest text-brand-darkgray mb-2">Philosophy</p>
+						<h2 class="text-2xl font-black uppercase tracking-widest m-0 group-hover:text-brand-gray transition-colors">{foundingManifesto.data.title}</h2>
+					</a>
+				)}
+
+				<!-- Read All Essays -->
+				<a href="/" class="block w-full border-[3px] border-brand-black bg-brand-white text-brand-black p-6 text-center hover:-translate-y-1 transition-transform shadow-[6px_6px_0_0_#050505] group decoration-transparent">
+					<h2 class="text-2xl font-black uppercase tracking-widest m-0 group-hover:text-brand-gray transition-colors">Read All Essays</h2>
+				</a>
+				
+			</div>
+		</div>
+		
+	</body>
+</html>
