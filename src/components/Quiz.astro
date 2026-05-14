@@ -1,0 +1,284 @@
+---
+// src/components/Quiz.astro
+---
+
+<div id="quiz-container" class="max-w-2xl mx-auto p-8 bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl rounded-3xl text-white relative overflow-hidden transition-all duration-500 min-h-[400px] flex flex-col justify-center">
+  
+  <!-- State 0: Intro -->
+  <div id="quiz-intro" class="quiz-section text-center space-y-6">
+    <h2 class="text-4xl font-serif font-bold tracking-tight text-white drop-shadow-md">The Drift Assessment</h2>
+    <p class="text-lg text-gray-200">Are you drifting through the second half of life, or moving with deliberate purpose? Answer 5 questions to reveal your archetype.</p>
+    <button id="start-btn" class="mt-8 px-8 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">Start Assessment</button>
+  </div>
+
+  <!-- State 1: Questions -->
+  <div id="quiz-questions" class="quiz-section hidden space-y-8">
+    <div class="flex justify-between items-center text-sm font-bold tracking-widest text-gray-400">
+      <span>QUESTION <span id="current-q-num">1</span> OF 5</span>
+      <div class="w-1/2 bg-white/10 h-1 rounded-full overflow-hidden">
+        <div id="progress-bar" class="bg-white h-full transition-all duration-300" style="width: 20%"></div>
+      </div>
+    </div>
+    <h3 id="question-text" class="text-3xl font-serif font-bold text-white drop-shadow-sm leading-tight">Question text here?</h3>
+    <div id="options-container" class="space-y-4">
+      <!-- Options injected here -->
+    </div>
+  </div>
+
+  <!-- State 2: Lead Capture -->
+  <div id="quiz-lead" class="quiz-section hidden text-center space-y-6">
+    <h2 class="text-3xl font-serif font-bold text-white">Assessment Complete.</h2>
+    <p class="text-lg text-gray-200">Enter your email to reveal your archetype and receive our "Daily Ritual System" framework.</p>
+    <form id="lead-form" class="max-w-md mx-auto space-y-4 pt-4 text-left">
+      <div>
+        <input type="email" id="email-input" required placeholder="Your email address" class="w-full px-6 py-4 bg-black/60 border border-white/20 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors" />
+      </div>
+      <button type="submit" id="submit-btn" class="w-full px-8 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors flex justify-center items-center">
+        <span id="submit-text">Reveal My Results</span>
+        <svg id="submit-spinner" class="hidden animate-spin ml-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+      </button>
+    </form>
+    <p id="form-error" class="text-red-400 text-sm hidden">Something went wrong. Please try again.</p>
+  </div>
+
+  <!-- State 3: Results -->
+  <div id="quiz-results" class="quiz-section hidden text-center space-y-6">
+    <p class="text-sm font-bold tracking-widest text-gray-400 uppercase">Your Archetype</p>
+    <h2 id="result-title" class="text-4xl font-serif font-bold text-white drop-shadow-md">The Archetype</h2>
+    <div class="h-px w-24 bg-white/20 mx-auto my-6"></div>
+    <p id="result-desc" class="text-lg text-gray-200 leading-relaxed text-left"></p>
+    <div class="pt-8">
+      <a href="/essays/daily-ritual-system" class="inline-block px-8 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">Read The Daily Ritual System</a>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  @reference "../styles/global.css";
+  
+  .quiz-section {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .option-btn {
+    @apply w-full text-left px-6 py-5 bg-black/40 border border-white/10 hover:bg-white/10 hover:border-white/40 transition-all duration-300 text-lg font-medium text-gray-100 flex items-start leading-snug;
+  }
+</style>
+
+<script>
+  const questions = [
+    {
+      text: "When you look at the day ahead, what is your primary feeling?",
+      options: [
+        { text: "A desire to avoid difficulty and just get through it.", score: "A" },
+        { text: "Overwhelm from trying to make everything perfect.", score: "B" },
+        { text: "Comfortable, but knowing I could be pushing harder.", score: "C" },
+        { text: "Ready to embrace the necessary resistance.", score: "D" }
+      ]
+    },
+    {
+      text: "How do you handle difficult, unavoidable challenges?",
+      options: [
+        { text: "I procrastinate or look for the easiest way out.", score: "A" },
+        { text: "I research endlessly trying to find the 'right' way.", score: "B" },
+        { text: "I rely on what has worked before without pushing limits.", score: "C" },
+        { text: "I face them head-on as opportunities for growth.", score: "D" }
+      ]
+    },
+    {
+      text: "When reflecting on the past month, where did most of your free time go?",
+      options: [
+        { text: "Scrolling, entertainment, or mindless distraction.", score: "A" },
+        { text: "Planning, organizing, but executing very little.", score: "B" },
+        { text: "Relaxing. I've earned my comfort.", score: "C" },
+        { text: "Building, training, or deliberate rest.", score: "D" }
+      ]
+    },
+    {
+      text: "What drives your most important decisions?",
+      options: [
+        { text: "Convenience and immediate gratification.", score: "A" },
+        { text: "Fear of making a mistake.", score: "B" },
+        { text: "Maintaining my current lifestyle and security.", score: "C" },
+        { text: "Long-term purpose, regardless of the difficulty.", score: "D" }
+      ]
+    },
+    {
+      text: "How would you describe your current trajectory?",
+      options: [
+        { text: "Drifting aimlessly without a clear target.", score: "A" },
+        { text: "Spinning my wheels in the planning phase.", score: "B" },
+        { text: "Cruising on autopilot.", score: "C" },
+        { text: "Moving forward deliberately and with intention.", score: "D" }
+      ]
+    }
+  ];
+
+  const archetypes = {
+    "A": { 
+      title: "The Drifter", 
+      desc: "You are avoiding discomfort and letting circumstances dictate your path. It's time to reject the drift, establish discipline, and take back control of your trajectory before the second half of your life slips away." 
+    },
+    "B": { 
+      title: "The Over-Thinker", 
+      desc: "You are paralyzed by analysis. You want to live deliberately, but the fear of making the wrong choice keeps you stagnant. You must learn that taking imperfect action is vastly superior to perfect inaction." 
+    },
+    "C": { 
+      title: "The Comfortable Man", 
+      desc: "You have achieved a level of success, but you are now stagnant. You are avoiding the next difficult climb because your current plateau is safe. To grow, you must voluntarily embrace new challenges." 
+    },
+    "D": { 
+      title: "The Deliberate Man", 
+      desc: "You embrace necessary suffering and act with clear purpose. You reject the drift and understand that true freedom comes from discipline. Continue to refine your rituals and hold the line." 
+    }
+  };
+
+  let currentQuestionIndex = 0;
+  let userScores = { A: 0, B: 0, C: 0, D: 0 };
+  let finalArchetype = "";
+
+  // DOM Elements
+  const introSection = document.getElementById('quiz-intro');
+  const questionsSection = document.getElementById('quiz-questions');
+  const leadSection = document.getElementById('quiz-lead');
+  const resultsSection = document.getElementById('quiz-results');
+  
+  const startBtn = document.getElementById('start-btn');
+  const questionText = document.getElementById('question-text');
+  const optionsContainer = document.getElementById('options-container');
+  const currentQNum = document.getElementById('current-q-num');
+  const progressBar = document.getElementById('progress-bar');
+  
+  const leadForm = document.getElementById('lead-form');
+  const emailInput = document.getElementById('email-input');
+  const submitBtn = document.getElementById('submit-btn');
+  const submitText = document.getElementById('submit-text');
+  const submitSpinner = document.getElementById('submit-spinner');
+  const formError = document.getElementById('form-error');
+
+  const resultTitle = document.getElementById('result-title');
+  const resultDesc = document.getElementById('result-desc');
+
+  // Initialization
+  function init() {
+    startBtn.addEventListener('click', startQuiz);
+    leadForm.addEventListener('submit', handleSubmission);
+  }
+
+  function startQuiz() {
+    introSection.classList.add('hidden');
+    questionsSection.classList.remove('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = questions[currentQuestionIndex];
+    currentQNum.textContent = currentQuestionIndex + 1;
+    progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+    questionText.textContent = q.text;
+    
+    optionsContainer.innerHTML = '';
+    q.options.forEach((opt, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="opacity-50 mr-4 font-mono text-sm">${index + 1}</span> ${opt.text}`;
+      btn.addEventListener('click', () => handleAnswer(opt.score));
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(scoreKey) {
+    userScores[scoreKey]++;
+    currentQuestionIndex++;
+    
+    if (currentQuestionIndex < questions.length) {
+      // Small delay for UX
+      optionsContainer.style.opacity = '0';
+      setTimeout(() => {
+        renderQuestion();
+        optionsContainer.style.opacity = '1';
+      }, 200);
+    } else {
+      calculateResult();
+      showLeadCapture();
+    }
+  }
+
+  function calculateResult() {
+    let maxScore = 0;
+    let resultKey = "A"; // default
+    
+    for (const [key, value] of Object.entries(userScores)) {
+      if (value > maxScore) {
+        maxScore = value;
+        resultKey = key;
+      }
+    }
+    finalArchetype = resultKey;
+  }
+
+  function showLeadCapture() {
+    questionsSection.classList.add('hidden');
+    leadSection.classList.remove('hidden');
+  }
+
+  async function handleSubmission(e) {
+    e.preventDefault();
+    const email = emailInput.value;
+    if (!email) return;
+
+    // UI Loading state
+    submitBtn.disabled = true;
+    submitText.textContent = 'Processing...';
+    submitSpinner.classList.remove('hidden');
+    formError.classList.add('hidden');
+
+    const archetypeData = archetypes[finalArchetype];
+
+    // Formspree payload
+    const payload = {
+      email: email,
+      archetype_result: archetypeData.title,
+      _subject: "New Quiz Lead: " + archetypeData.title
+    };
+
+    try {
+      // PLACEHOLDER ID: Replace 'YOUR_FORM_ID' with actual Formspree ID
+      const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        showResults(archetypeData);
+      } else {
+        throw new Error('Form submission failed');
+      }
+    } catch (error) {
+      console.error(error);
+      formError.classList.remove('hidden');
+      submitBtn.disabled = false;
+      submitText.textContent = 'Reveal My Results';
+      submitSpinner.classList.add('hidden');
+    }
+  }
+
+  function showResults(data) {
+    leadSection.classList.add('hidden');
+    resultsSection.classList.remove('hidden');
+    
+    resultTitle.textContent = data.title;
+    resultDesc.textContent = data.desc;
+  }
+
+  // Run init on DOM load
+  document.addEventListener('DOMContentLoaded', init);
+</script>
