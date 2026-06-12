@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Deliberate">
+    <link rel="apple-touch-icon" href="icon.png">
+    <title>Deliberate Keto Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>DELIBERATE</h1>
+            <p class="subtitle">Discipline. Metrics. Action.</p>
+        </header>
+
+        <main>
+            <!-- SMART LOGGING SECTION -->
+            <section class="card smart-log-card">
+                <h2>Smart Log</h2>
+                <div class="input-group smart-log-group">
+                    <input type="text" id="smart-input" placeholder="e.g. 3 eggs, 1 shot espresso, 500ml water" onkeypress="handleSmartInput(event)">
+                    <button onclick="processSmartLog()">Log Item</button>
+                </div>
+            </section>
+
+            <!-- MACROS SECTION -->
+            <section class="card macros-card">
+                <h2>Daily Macros</h2>
+                <div class="progress-container">
+                    <div class="macro">
+                        <div class="circular-progress" id="fat-progress">
+                            <div class="inner-circle"><span id="fat-val">0</span>g</div>
+                        </div>
+                        <p>Fat (<span class="target-val">150g</span>)</p>
+                    </div>
+                    <div class="macro">
+                        <div class="circular-progress" id="protein-progress">
+                            <div class="inner-circle"><span id="protein-val">0</span>g</div>
+                        </div>
+                        <p>Protein (<span class="target-val">120g</span>)</p>
+                    </div>
+                    <div class="macro">
+                        <div class="circular-progress" id="carbs-progress">
+                            <div class="inner-circle"><span id="carbs-val">0</span>g</div>
+                        </div>
+                        <p>Net Carbs (<span class="target-val">30g</span>)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- METRICS SECTION (WATER & CAFFEINE) -->
+            <div class="metrics-grid">
+                <section class="card metric-card">
+                    <h2>Water</h2>
+                    <div class="metric-display">
+                        <span id="water-val" class="metric-number">0</span>
+                        <span class="metric-unit">ml / 3000ml</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill" id="water-bar"></div>
+                    </div>
+                </section>
+
+                <section class="card metric-card">
+                    <h2>Caffeine</h2>
+                    <div class="metric-display">
+                        <span id="caffeine-val" class="metric-number">0</span>
+                        <span class="metric-unit">mg / 400mg</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill" id="caffeine-bar"></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- HISTORY SECTION -->
+            <section class="card history-card">
+                <h2>Today's Logs</h2>
+                <ul id="history-list">
+                    <!-- Logs will be injected here -->
+                </ul>
+                <button class="reset-btn" onclick="resetDay()">Reset Day</button>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
